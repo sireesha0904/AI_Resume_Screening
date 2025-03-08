@@ -1,25 +1,19 @@
-# train_model.py
+import os
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
-import pickle
+from utils.text_extractor import extract_text_from_resume
+from utils.preprocess import preprocess_text
 
-# Load dataset
-df = pd.read_csv('data/dataset.csv')
-X = df['job_description_text'].fillna('')
-y = df['job_title']
+# Corrected file path pointing to the 'data' folder outside of 'backend'
+csv_file = os.path.join(os.path.dirname(__file__), '../../data/dataset.csv')
+absolute_path = os.path.abspath(csv_file)
 
-# Vectorize text data
-vectorizer = TfidfVectorizer(stop_words='english')
-X_vectorized = vectorizer.fit_transform(X)
+# Debug: Show the expected path and list files in the directory
+print("Expected Dataset Path:", absolute_path)
+print("Files in data directory:", os.listdir(os.path.join(os.path.dirname(__file__), '../../data')))
 
-# Train the model
-model = MultinomialNB()
-model.fit(X_vectorized, y)
-
-# Save the model
-model_path = 'model/resume_model.pkl'
-with open(model_path, 'wb') as f:
-    pickle.dump(model, f)
-
-print('Model trained and saved successfully!')
+if os.path.exists(absolute_path):
+    print("✅ File found!")
+    df = pd.read_csv(absolute_path)
+    print(df.head())
+else:
+    print("❌ File not found! Check the file path and placement.")

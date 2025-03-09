@@ -72,14 +72,14 @@ def predict():
     try:
         # Extract and preprocess resume text
         resume_text = extract_text_from_resume(file)
+        if not resume_text:
+            return jsonify({'error': 'No text extracted from resume'}), 400
         preprocessed_text = preprocess_text(resume_text)
 
         # Make a prediction using the trained model (predict job role)
         job_prediction = model.predict([preprocessed_text])[0]
 
         # You can calculate the qualification score based on the model's prediction
-        # Example: You can map your AI predictions to skills dynamically by using a similar logic
-        # Let's assume your model predicts the role 'data_analyst', you could map the skills dynamically
         job_profiles = {
             "data_analyst": ["python", "sql", "excel", "data analysis", "statistics", "machine learning"],
             "software_engineer": ["java", "c++", "spring", "angular", "javascript", "development"],
@@ -105,7 +105,8 @@ def predict():
         })
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print(f"Error occurred: {str(e)}")  # Log the error
+        return jsonify({'error': 'Something went wrong, please try again later.'}), 500
 
 if __name__ == '__main__':  
     app.run(debug=True)

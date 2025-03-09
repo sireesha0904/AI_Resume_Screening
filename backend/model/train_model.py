@@ -1,7 +1,9 @@
+from dotenv import load_dotenv
 import os
 import pandas as pd
-from utils.text_extractor import extract_text_from_resume
-from utils.preprocess import preprocess_text
+from backend.utils.text_extractor import extract_text_from_resume
+from backend.utils.preprocess import preprocess_text
+load_dotenv()
 
 # Corrected file path pointing to the 'data' folder outside of 'backend'
 csv_file = os.path.join(os.path.dirname(__file__), '../../data/dataset.csv')

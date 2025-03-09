@@ -13,10 +13,13 @@ document.getElementById('resumeForm').addEventListener('submit', async function(
         
         if (!response.ok) {
             alert('Error: ' + response.statusText);
+            console.error('Response status:', response.status);
             return;
         }
         
         const data = await response.json();
+        console.log('Server Response:', data);
+        
         document.getElementById('name').textContent = data.name;
         document.getElementById('jobDescription').textContent = data.job_description;
         document.getElementById('qualificationScore').textContent = data.qualification_score + '%';

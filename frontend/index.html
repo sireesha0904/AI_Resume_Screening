@@ -2,32 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AI Resume Screening</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Screening</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>AI Resume Screening</h1>
-        <form id="resumeForm">
+        <h1>Resume Screening</h1>
+        <form id="upload-form" enctype="multipart/form-data">
             <label for="resume">Upload Resume:</label>
-            <input 
-                type="file" 
-                id="resume" 
-                name="resume" 
-                accept=".pdf,.doc,.docx" 
-                title="Select your resume file" 
-                required 
-            >
-            <button type="submit">Upload & Analyze</button>
+            <input type="file" name="resume" id="resume" accept=".pdf,.docx,.txt" required title="Choose your resume file">
+            <button type="submit" title="Submit resume">Submit</button>
         </form>
+        
         <div id="result" class="result">
-            <h2>Analysis Result</h2>
+            <h3>Resume Analysis</h3>
             <p><strong>Name:</strong> <span id="name"></span></p>
-            <p><strong>Job Description:</strong> <span id="jobDescription"></span></p>
-            <p><strong>Qualification Score:</strong> <span id="qualificationScore"></span></p>
-            <p><strong>Resume Score:</strong> <span id="resumeScore"></span></p>
+            <p><strong>Job Description:</strong> <span id="job-description"></span></p>
+            <p><strong>Qualifications:</strong> <span id="qualifications"></span></p>
+            <p><strong>Resume Score:</strong> <span id="resume-score"></span></p>
         </div>
+        <!-- Add a loading spinner -->
+<div id="loading-spinner" class="loading-spinner" style="display: none;">
+    <p>Processing your resume...</p>
+</div>
+
     </div>
 
     <script src="script.js"></script>

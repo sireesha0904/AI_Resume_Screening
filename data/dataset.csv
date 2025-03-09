@@ -1,7 +1,7 @@
 filename,label
-resume1.docx,qualified
-resume2.docx,not qualified
-resume3.docx,qualified
-resume4.docx,not qualified
-resume5.docx,qualified
-resume6.docx,not qualified
+resume-1.docx,software_developer
+resume-2.docx,data_analyst
+resume-3.docx,web_designer
+resume-4.docx,project_manager
+resume-5.docx,qa_engineer
+resume-6.docx,devops_engineer

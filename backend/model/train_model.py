@@ -1,21 +1,33 @@
-from dotenv import load_dotenv
-import os
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
 import pandas as pd
-from backend.utils.text_extractor import extract_text_from_resume
-from backend.utils.preprocess import preprocess_text
-load_dotenv()
+from utils.text_extractor import extract_text_from_resume
+from utils.preprocess import preprocess_text
 
-# Corrected file path pointing to the 'data' folder outside of 'backend'
-csv_file = os.path.join(os.path.dirname(__file__), '../../data/dataset.csv')
-absolute_path = os.path.abspath(csv_file)
+# Load your dataset
+csv_file = "path_to_your_data/dataset.csv"
+df = pd.read_csv(csv_file)
 
-# Debug: Show the expected path and list files in the directory
-print("Expected Dataset Path:", absolute_path)
-print("Files in data directory:", os.listdir(os.path.join(os.path.dirname(__file__), '../../data')))
+# Preprocess the text column and split dataset into features and labels
+X = df['filename'].apply(extract_text_from_resume).apply(preprocess_text)
+y = df['label']
 
-if os.path.exists(absolute_path):
-    print("✅ File found!")
-    df = pd.read_csv(absolute_path)
-    print(df.head())
-else:
-    print("❌ File not found! Check the file path and placement.")
+# Convert text data to numerical features using TF-IDF
+vectorizer = TfidfVectorizer(stop_words='english')
+X_tfidf = vectorizer.fit_transform(X)
+
+# Train a classifier
+X_train, X_test, y_train, y_test = train_test_split(X_tfidf, y, test_size=0.2, random_state=42)
+clf = RandomForestClassifier()
+clf.fit(X_train, y_train)
+
+# Evaluate the model
+y_pred = clf.predict(X_test)
+print(classification_report(y_test, y_pred))
+
+# Save the trained model to a file
+import pickle
+with open('resume_model.pkl', 'wb') as f:
+    pickle.dump(clf, f)

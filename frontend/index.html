@@ -9,24 +9,23 @@
 <body>
     <div class="container">
         <h1>Resume Screening</h1>
-        <form id="upload-form" enctype="multipart/form-data">
+        <form id="upload-form" method="post" enctype="multipart/form-data">
             <label for="resume">Upload Resume:</label>
-            <input type="file" name="resume" id="resume" accept=".pdf,.docx,.txt" required title="Choose your resume file">
-            <button type="submit" title="Submit resume">Submit</button>
+            <input type="file" name="resume" id="resume" accept=".pdf,.docx,.txt" required>
+            <button type="submit">Submit</button>
         </form>
         
-        <div id="result" class="result">
+        <div id="loading-spinner" class="loading-spinner" style="display: none;">
+            <p>Processing your resume...</p>
+        </div>
+
+        <div id="result" class="result" style="display: none;">
             <h3>Resume Analysis</h3>
             <p><strong>Name:</strong> <span id="name"></span></p>
             <p><strong>Job Description:</strong> <span id="job-description"></span></p>
             <p><strong>Qualifications:</strong> <span id="qualifications"></span></p>
             <p><strong>Resume Score:</strong> <span id="resume-score"></span></p>
         </div>
-        <!-- Add a loading spinner -->
-<div id="loading-spinner" class="loading-spinner" style="display: none;">
-    <p>Processing your resume...</p>
-</div>
-
     </div>
 
     <script src="script.js"></script>

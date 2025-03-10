@@ -5,9 +5,10 @@ from utils.preprocess import preprocess_text
 import pickle
 from collections import Counter
 import re
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 # Load the trained model
 model_path = os.path.join(os.path.dirname(__file__), 'model', 'resume_model.pkl')
 with open(model_path, 'rb') as f:

@@ -1,48 +1,44 @@
-  document
-    .getElementById("upload-form")
-    .addEventListener("submit", async function (event) {
-      event.preventDefault();
-
-      const fileInput = document.getElementById("resume");
-      const formData = new FormData();
-      formData.append("resume", fileInput.files[0]);
-
-      console.log("File Selected:", fileInput.files[0]); // Debugging
-
-      const loadingSpinner = document.getElementById("loading-spinner");
-      const resultDiv = document.getElementById("result");
-
-      loadingSpinner.style.display = "block";
-      resultDiv.style.display = "none";
+document
+  .getElementById("resume-form")
+  .addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const formData = new FormData();
+    const fileInput = document.getElementById("resume");
+    const file = fileInput.files[0];
+    formData.append("resume", file);
 
     try {
-    const response = await fetch("http://127.0.0.1:5000/predict", {
-      method: "POST",
-      body: formData,
-    });
+      const response = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        body: formData,
+      });
 
+      const result = await response.json();
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Server Error:", errorText);
-        alert("Error: " + errorText);
-        return;
+      if (response.ok) {
+        document.getElementById("output").innerHTML = `
+                        <h2>Analysis Result:</h2>
+                        <p><strong>Job Description:</strong> ${
+                          result.job_description
+                        }</p>
+                        <p><strong>Name:</strong> ${result.name}</p>
+                        <p><strong>Qualifications:</strong> ${result.qualifications.join(
+                          ", "
+                        )}</p>
+                        <p><strong>Resume Score:</strong> ${
+                          result.resume_score
+                        }</p>
+                        <h3>Resume Text Preview:</h3>
+                        <p>${result.resume_preview}</p>
+                    `;
+      } else {
+        document.getElementById(
+          "output"
+        ).innerHTML = `<p style="color:red;">${result.error}</p>`;
       }
-
-      const data = await response.json();
-      document.getElementById("name").textContent = data.name;
-      document.getElementById("job-description").textContent =
-        data.job_description;
-      document.getElementById("qualifications").textContent =
-        data.qualifications.join(", ");
-      document.getElementById("resume-score").textContent = data.resume_score;
-
-      loadingSpinner.style.display = "none";
-      resultDiv.style.display = "block";
     } catch (error) {
-      console.error("Fetch Error:", error);
-      alert("An error occurred while processing the resume.");
-    } finally {
-      loadingSpinner.style.display = "none";
+      document.getElementById(
+        "output"
+      ).innerHTML = `<p style="color:red;">An error occurred while processing the resume.</p>`;
     }
-    });
+  });

@@ -1,0 +1,11 @@
+                    precision    recall  f1-score   support
+
+      data_analyst       0.50      1.00      0.67         1
+   devops_engineer       0.00      0.00      0.00         1
+   project_manager       0.00      0.00      0.00         1
+software_developer       0.33      1.00      0.50         1
+      web_designer       0.00      0.00      0.00         1
+
+          accuracy                           0.40         5
+         macro avg       0.17      0.40      0.23         5
+      weighted avg       0.17      0.40      0.23         5

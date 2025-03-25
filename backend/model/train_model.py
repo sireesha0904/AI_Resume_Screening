@@ -1,33 +1,60 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
+import os
 import pandas as pd
-from utils.text_extractor import extract_text_from_resume
-from utils.preprocess import preprocess_text
+import docx
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+import joblib
 
-# Load your dataset
-csv_file = "path_to_your_data/dataset.csv"
+# Path to dataset
+csv_file = r"C:\Users\modis\Documents\AI_Resume_Screening\data\dataset.csv"
+
+# Load CSV
 df = pd.read_csv(csv_file)
 
-# Preprocess the text column and split dataset into features and labels
-X = df['filename'].apply(extract_text_from_resume).apply(preprocess_text)
-y = df['label']
+# Convert relative paths to absolute paths if needed
+df['filename'] = df['filename'].apply(
+    lambda x: os.path.join(r"C:\Users\modis\Documents\AI_Resume_Screening", x.replace("/", "\\"))
+)
 
-# Convert text data to numerical features using TF-IDF
-vectorizer = TfidfVectorizer(stop_words='english')
+# Function to read text from DOCX
+def read_docx(file_path):
+    try:
+        doc = docx.Document(file_path)
+        full_text = [para.text for para in doc.paragraphs]
+        return ' '.join(full_text)
+    except Exception as e:
+        print(f"Error reading {file_path}: {e}")
+        return ''
+
+# Read resume texts
+df['text'] = df['filename'].apply(read_docx)
+
+# Remove entries where text is empty
+df = df[df['text'].str.strip() != '']
+
+# Features & Labels
+X = df['text'].values
+y = df['label'].values
+
+# TF-IDF Vectorizer
+vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
 X_tfidf = vectorizer.fit_transform(X)
 
-# Train a classifier
+# Split data
 X_train, X_test, y_train, y_test = train_test_split(X_tfidf, y, test_size=0.2, random_state=42)
-clf = RandomForestClassifier()
-clf.fit(X_train, y_train)
 
-# Evaluate the model
-y_pred = clf.predict(X_test)
+# Train model
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train, y_train)
+
+# Evaluate
+y_pred = model.predict(X_test)
 print(classification_report(y_test, y_pred))
 
-# Save the trained model to a file
-import pickle
-with open('resume_model.pkl', 'wb') as f:
-    pickle.dump(clf, f)
+# Save model & vectorizer
+joblib.dump(model, r"C:\Users\modis\Documents\AI_Resume_Screening\backend\model\resume_model.pkl")
+joblib.dump(vectorizer, r"C:\Users\modis\Documents\AI_Resume_Screening\backend\model\tfidf_vectorizer.pkl")
+
+print("Model and vectorizer saved successfully!")

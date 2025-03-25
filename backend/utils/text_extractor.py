@@ -1,29 +1,24 @@
 from docx import Document
 import os
+def extract_text_from_resume(file_path):
+    """Extracts text from a .docx resume file given its path."""
+    try:
+        document = Document(file_path)
 
-def extract_text_from_resume(file):
-    """Extracts text from a .docx resume file."""
-    temp_path = os.path.join(os.path.dirname(__file__), 'temp_resume.docx')
+        resume_text = []
+        # Extract paragraphs
+        for para in document.paragraphs:
+            resume_text.append(para.text)
 
-    file.seek(0)  # Reset file pointer (for Flask uploads)
-    with open(temp_path, 'wb') as temp_file:
-        temp_file.write(file.read())
+        # Extract table data (if any)
+        for table in document.tables:
+            for row in table.rows:
+                for cell in row.cells:
+                    resume_text.append(cell.text)
 
-    document = Document(temp_path)
-
-    # Extract paragraphs
-    resume_text = []
-    for para in document.paragraphs:
-        resume_text.append(para.text)
-
-    # Extract table data (if any)
-    for table in document.tables:
-        for row in table.rows:
-            for cell in row.cells:
-                resume_text.append(cell.text)
-
-    os.remove(temp_path)  # Delete temp file
-
-    extracted_text = ' '.join(resume_text).strip()
-    print("Extracted Resume Text:", extracted_text[:500])  # Debug output
-    return extracted_text
+        extracted_text = ' '.join(resume_text).strip()
+        print(f"Extracted text from {file_path}:", extracted_text[:300])  # Optional debug
+        return extracted_text
+    except Exception as e:
+        print(f"Error reading {file_path}: {e}")
+        return ""

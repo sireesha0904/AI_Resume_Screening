@@ -76,9 +76,6 @@ python scripts/train_model.py
 python scripts/predict.py "path/to/resume.docx"
 ```
 
-## 📜 License
-This project is licensed under the **MIT License**.
-
 ## 🤝 Contributions
 Feel free to **fork** this repository and create a **pull request** if you want to contribute!
 

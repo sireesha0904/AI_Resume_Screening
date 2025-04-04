@@ -83,4 +83,3 @@ This project is licensed under the **MIT License**.
 Feel free to **fork** this repository and create a **pull request** if you want to contribute!
 
 ---
-🔗 **Author**: [Modi Sireesha](https://your-portfolio-link.com)
